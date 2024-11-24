@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.example.raft";
+option java_outer_classname = "RaftNodeProto";
+
+service RaftNode {
+  rpc RequestVote(RequestVoteRequest) returns (VoteResponse);
+  rpc AppendEntries(AppendEntriesRequest) returns (AppendEntriesResponse);
+  rpc ExecuteOperation(ExecuteOperationRequest) returns (ExecuteOperationResponse);
+}
+
+message RequestVoteRequest {
+  int32 candidateId = 1;
+  int32 term = 2;
+  int32 lastLogIndex = 3;
+  int32 lastLogTerm = 4;
+}
+
+message VoteResponse {
+  int32 term = 1;
+  bool voteGranted = 2;
+}
+
+message AppendEntriesRequest {
+  int32 leaderId = 1;
+  int32 term = 2;
+  int32 prevLogIndex = 3;
+  int32 prevLogTerm = 4;
+  repeated LogEntry entries = 5;
+  int32 leaderCommit = 6;
+}
+
+message AppendEntriesResponse {
+  int32 term = 1;
+  bool success = 2;
+}
+
+message LogEntry {
+  int32 index = 1;
+  int32 term = 2;
+  string operation = 3;
+}
+
+message ExecuteOperationRequest {
+  string operation = 1;
+}
+
+message ExecuteOperationResponse {
+  bool success = 1;
+}
